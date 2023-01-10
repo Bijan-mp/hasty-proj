@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="starter-template">
+    <h1>Hasty project</h1>
+    <hr><br>
+    <!-- ================================ -->
+    <div class="card border-info">
+        <div class="card-header">
+            Get Job Detail
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <form class="form-inline">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="number" class="form-control" id="inputJobId" placeholder="job id" >
+                    </div>
+                    <button type="button" class="btn btn-primary mb-2" onclick="getJobDetails()">get job details</button>
+                </form>
+            </div>
+            <div class="row">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Job Id</th>
+                            <th>Object Id</th>
+                            <th>Timestamp</th>
+                            <th>duration</th>
+                            <th>status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="job">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="card border-info">
+        <div class="card-header">
+            Create Job
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <form class="form-inline">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="number" class="form-control" id="inputObjectId" placeholder="object id" value="1">
+                    </div>
+                    <button type="button" class="btn btn-primary  mb-2" onclick="post_object()">add</button>
+                </form>
+            </div>
+            <hr><br>
+            <div class="row">
+                <h3>Created Jobs</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Job Id</th>
+                            <th>Object Id</th>
+                            <th>Timestamp</th>
+                            <th>status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobs">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

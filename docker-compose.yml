@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+
+  hastyweb:
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8000
+    command: uvicorn src.webapp.main:app --host 0.0.0.0 --reload
+    volumes:
+      - ./:/app
+    env_file:
+      - ./.env
+
+    depends_on:
+      postgresserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    
+
+  worker:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    command: celery -A src.workerapp.worker worker --loglevel=info --logfile=celery.log
+    volumes:
+      - ./:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - hastyweb
+      - redis
+      
+  redis:
+    image: redis:6-alpine
+
+  postgresserver:
+    image: postgres:14.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file: 
+      - ./.env.db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s  
+
+  flower:
+    image: mher/flower:0.9.7
+    env_file:
+      - ./.env
+
+    ports:
+      - 8899:8888
+    depends_on:
+      - hastyweb
+      - redis
+      - worker
+
+volumes:
+  postgres_data:
